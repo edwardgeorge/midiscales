@@ -1,6 +1,10 @@
+#include <Adafruit_TinyUSB.h>
 #include <MIDI.h>
 
+Adafruit_USBD_MIDI usb_midi;
+
 MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
+MIDI_CREATE_INSTANCE(Adafruit_USBD_MIDI, usb_midi, USB_MIDI);
 
 //set MIDI channels: 144 = channel 1 note on, 128 = channel 1 note off, 145 = channel 2 note on, 129 = channel 2 note off etc..
 //row 1
@@ -50,9 +54,20 @@ int octaveRow1 = 3;
 int octaveRow2 = 4;
 
 void setup() {
+  if (!TinyUSBDevice.isInitialized()) {
+    TinyUSBDevice.begin(0);
+  }
+  usb_midi.setStringDescriptor("FRUKU MIDI SCALES");
   // Set MIDI baud rate:
   //Serial1.begin(31250);
   MIDI.begin(MIDI_CHANNEL_OMNI);
+  USB_MIDI.begin(MIDI_CHANNEL_OMNI);
+
+  if (TinyUSBDevice.mounted()) {
+    TinyUSBDevice.detach();
+    delay(10);
+    TinyUSBDevice.attach();
+  }
 
   //set cmajor scale
   S1 = Cnote;
@@ -443,6 +458,7 @@ delay(25);
 
 void noteOn(int pitch, int velocity, int channel) {
   MIDI.sendNoteOn(pitch, velocity, channel);
+  USB_MIDI.sendNoteOn(pitch, velocity, channel);
   //Serial1.write(cmd);
   //Serial1.write(pitch);
   //Serial1.write(velocity);
@@ -450,4 +466,5 @@ void noteOn(int pitch, int velocity, int channel) {
 
 void noteOff(int pitch, int velocity, int channel) {
   MIDI.sendNoteOff(pitch, velocity, channel);
+  USB_MIDI.sendNoteOff(pitch, velocity, channel);
 }
