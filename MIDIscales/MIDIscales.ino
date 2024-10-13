@@ -6,14 +6,6 @@ Adafruit_USBD_MIDI usb_midi;
 MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
 MIDI_CREATE_INSTANCE(Adafruit_USBD_MIDI, usb_midi, USB_MIDI);
 
-//set MIDI channels: 144 = channel 1 note on, 128 = channel 1 note off, 145 = channel 2 note on, 129 = channel 2 note off etc..
-//row 1
-int MIDI_CH_ON1 = 144;
-int MIDI_CH_OFF1 = 128;
-//row 2
-int MIDI_CH_ON2 = 144;
-int MIDI_CH_OFF2 = 128;
-
 int ROW1_CHAN = 1;
 int ROW2_CHAN = 2;
 
